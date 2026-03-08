@@ -1,8 +1,13 @@
 package a1.impl;
 
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import a1.impl.Model.BorrowingManager;
+import a1.impl.Model.User;
 import a1.impl.View.ClientManager;
 import a1.impl.View.Controllers.UpdatingController;
 import spark.Spark;
@@ -18,19 +23,28 @@ public class ApplicationStart {
         UpdatingController controller = new UpdatingController();
         BorrowingManager manager = new BorrowingManager(controller);
 
-        Spark.port(8080);
+        Spark.port(1973);
 
+        List<User> allUsers = new ArrayList<User>();
 
-        get("/login", (req,res)->{
+        get("/", (req, res) -> {
+            res.type("text/html");
+            return new String(Files.readAllBytes(Paths.get("src/main/java/a1/impl/View/public/index.html")));
+        });
 
-
-
+        get("/borrow", (req, res) -> {
 
             return null;
         });
 
-
         get("/updates", (req, res) -> {
+            String userName = req.params().get("name");// basically i create a user per connection. very inefficient but
+                                                       // since security and persistence arent issues id rather write
+                                                       // this in 5
+                                                       // minutes than tinker with logins for an hour
+            User user = new User(userName);
+            allUsers.add(user);
+            manager.addObservngUser(user);
             res.type("text/event-stream");
             res.header("Cache-Control", "no-cache");
             res.header("Connection", "keep-alive");
@@ -38,12 +52,18 @@ public class ApplicationStart {
 
             PrintWriter writer = res.raw().getWriter();
             ClientManager.addClient(writer);
+
+            controller.setUserId(userName);
+
             try {
                 while (!writer.checkError()) {
-                    Thread.sleep(1000);
+                    Thread.sleep(1000);// basically observer state pattern but as a web server; i need to keep the tcp
+                                       // con alive until closed or crashed
                 }
             } finally {
                 ClientManager.removeClient(writer);
+                allUsers.remove(user);// no memleaks
+                manager.removeObservingUser(user);
             }
 
             return null;

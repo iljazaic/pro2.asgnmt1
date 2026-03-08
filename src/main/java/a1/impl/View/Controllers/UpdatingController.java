@@ -11,4 +11,8 @@ public class UpdatingController implements ObservingUser {
         String data = "{\"id\":\"%s\",\"state\":\"%s\"}".formatted(changedId, newState);
         ClientManager.broadcast(data);
     }
+
+    public void setUserId(String userId) {
+        ClientManager.broadcast("\"userId\":\"%s\"".formatted(userId));
+    }
 }

@@ -46,7 +46,7 @@ public class BorrowingManager implements BorrowingManagerInterface {
     public boolean attemptBorrowing(String vinylId){
         for (Vinyl vinyl : vinylList) {
             if(vinyl.getId().equals(vinylId)){
-                return vinyl.attemptBorrow();
+                return vinyl.attemptBorrow(vinylId);
             }    
         }
         return false;

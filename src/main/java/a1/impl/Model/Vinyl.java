@@ -1,12 +1,12 @@
-package Model;
+package a1.impl.Model;
 
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.UUID;
 
-import Model.ModelInterfaces.BorrowableMaterialInterface;
-import Model.StateModel.FreeState;
-import Model.StateModel.StateInterface;
+import a1.impl.Model.ModelInterfaces.BorrowableMaterialInterface;
+import a1.impl.Model.StateModel.FreeState;
+import a1.impl.Model.StateModel.StateInterface;
 
 public class Vinyl implements BorrowableMaterialInterface {
     private String name;
@@ -33,7 +33,7 @@ public class Vinyl implements BorrowableMaterialInterface {
     }
 
 
-    
+
 
 
     @Override
