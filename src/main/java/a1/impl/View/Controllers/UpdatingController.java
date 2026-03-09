@@ -11,22 +11,24 @@ public class UpdatingController implements ObservingUser {
 
     @Override
     public void update(String changedId, StateInterface newState) {
-        String data = "{\"id\":\"%s\",\"state\":\"%s\"}".formatted(changedId, newState.getClass().getSimpleName());
+        String data = "{\"id\":\"%s\",\"state\":\"%s\", \"stateOwner\":\"%s\"}".formatted(changedId,
+                newState.getClass().getSimpleName(), newState.getOwner());
         ClientManager.broadcast(data, "updateState");
     }
 
     public void setUserId(String userId) {
-        ClientManager.broadcast("\"userId\":\"%s\"".formatted(userId), "setId");
+        ClientManager.broadcast("{\"id\":\"%s\"}".formatted(userId), "setId");
     }
 
     public void sendWhole(List<Vinyl> wholeList) {
         String jsonString = "[";
 
         for (Vinyl vinyl : wholeList) {
-            jsonString += "{\"name\":\"%s\", \"id\":\"%s\",\"state\":\"%s\"},".formatted(vinyl.getName(), vinyl.getId(),
-                    vinyl.getState().getClass().getSimpleName().toString());
+            jsonString += "{\"name\":\"%s\", \"id\":\"%s\",\"state\":\"%s\",\"stateOwner\":\"%s\"},".formatted(
+                    vinyl.getName(), vinyl.getId(),
+                    vinyl.getState().getClass().getSimpleName().toString(), vinyl.getState().getOwner());
         }
-        jsonString = jsonString.substring(0,jsonString.length()-1) + "]";
+        jsonString = jsonString.substring(0, jsonString.length() - 1) + "]";
 
         ClientManager.broadcast(jsonString, "updateList");
     }

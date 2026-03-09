@@ -64,7 +64,7 @@ public class ApplicationStart {
 
             for (User user : allUsers) {
                 if (user.getName().equals(userName)) {
-                    manager.attemptReservation(vinylId, userName);
+                    manager.attemptReservation(vinylId, user.getId());
                     break;
                 }
             }
@@ -88,7 +88,7 @@ public class ApplicationStart {
             PrintWriter writer = res.raw().getWriter();
             ClientManager.addClient(writer);
 
-            controller.setUserId(userName);
+            controller.setUserId(user.getId());
             controller.sendWhole(manager.getVinylList());
             try {
                 while (!writer.checkError()) {

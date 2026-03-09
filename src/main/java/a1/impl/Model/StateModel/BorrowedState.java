@@ -18,9 +18,13 @@ public class BorrowedState implements StateInterface {
         return false;
     }
 
+    @Override
+    public boolean onRemoveAttempt() {
+        return false;
+    }
 
     public boolean onReservationAttempt() {
-        return false;
+        return true;
     }
 
 }

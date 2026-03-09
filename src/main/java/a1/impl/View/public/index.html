@@ -23,19 +23,40 @@
 
             const source = new EventSource('/updates?name=' + name); //primitive tunnel; un-ending connection
 
+
             source.addEventListener('updateList', (e) => {
                 loadList(JSON.parse(e.data));
             });
+            source.addEventListener('setId', (e) => {
+                USERID = JSON.parse(e.data).id;
+            });
+
 
             source.addEventListener('updateState', (e) => {
                 console.log("updating state")
                 const data = JSON.parse(e.data);
                 let li = document.querySelector(`[id="${data.id}"]`)
-                if (li !== null) {
+                if (li !== null && li !== undefined) {
                     li.querySelector('.state').innerHTML = data.state
+                    console.log(data.stateOwner)
+                    console.log(USERID)
+                    if (data.stateOwner === USERID) {
+                        if (data.state == "BorrowedState") {
+                            console.log(li.innerHTML)
+                            mvBetweenLists(document.querySelector("#list2"), li);
+                        } else {
+                            mvBetweenLists(document.querySelector("#list3"), li);
+                        }
+                    }
+
                 }
             });
         }
+    }
+
+    function mvBetweenLists(to, el) {
+        to.innerHTML += `<li id="${el.id}" style="${el.style.toString()}" class="${el.className}">`+el.innerHTML+"</li>";
+        el.remove();
     }
 
 
@@ -47,12 +68,17 @@
     }
 
     function loadList(list) {
-        let el = document.querySelector("#list")
-        el.innerHTML = '';
+        let otherList = document.querySelector("#list")
 
+        let ownListB = document.querySelector("#list2")
+        let ownListR = document.querySelector("#list3")
+        otherList.innerHTML = '';
+        ownListB.innerHTML = '';
+        ownListR.innerHTML = '';
         list.forEach(li => {
 
-            el.innerHTML += `
+
+            const html = `
             <li id="${li.id}" class="${li.state}" style="display:flex;  justify-content:space-between; flex-direction:row; border-bottom: 2px solid black; padding: 5px">
             <p>${li.name}</p>
             <p>${li.id}</p>
@@ -61,6 +87,16 @@
             <button id="bb" onclick="borrow('${li.id}')">Borrow</button>
             </li>
             `
+
+            if (li.stateOwner == USERID) {
+                if (li.state === "Borrowed State") {
+                    ownListB.innerHTML += html;
+                } else {
+                    ownListR.innerHTML += html;
+                }
+            } else {
+                otherList.innerHTML += html;
+            }
         });
     }
 
@@ -80,7 +116,16 @@
         </div>
         <div class="own">
             <h1>Your Vinyls</h1>
+            <h2>
+                Your Borrowed
+            </h2>
             <ul style="display: flex; flex-direction: column; gap:10px" id="list2">
+
+            </ul>
+            <h2>
+                Your Reserved
+            </h2>
+            <ul style="display: flex; flex-direction: column; gap:10px" id="list3">
 
             </ul>
         </div>

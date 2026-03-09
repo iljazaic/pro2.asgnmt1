@@ -77,8 +77,9 @@ public class BorrowingManager implements BorrowingManagerInterface {
                 boolean success = vinyl.getState().onBorrowAttempt(userId);
                 if (success) {
 
-                    updateVinylState(vinylId, new BorrowedState(userId));
+                    System.out.println("attempting borrowing 01");
 
+                    updateVinylState(vinylId, new BorrowedState(userId));
                 }
                 break;
             }
