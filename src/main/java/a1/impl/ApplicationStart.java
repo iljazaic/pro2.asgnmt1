@@ -24,12 +24,9 @@ public class ApplicationStart {
         UpdatingController controller = new UpdatingController();
         BorrowingManager manager = new BorrowingManager(controller);
 
-
         for (int i = 1; i <= 10; i++) {
-            manager.addVinyl(new Vinyl("V" + i));
+            manager.addVinyl(new Vinyl("V" + i, i, "Artist"+i));
         }
-
-
 
         Spark.port(1973);
         System.out.println("Web GUI running on http://localhost:1973");
@@ -40,16 +37,19 @@ public class ApplicationStart {
             return new String(Files.readAllBytes(Paths.get("src/main/java/a1/impl/View/public/index.html")));
         });
 
-
         get("/borrow", (req, res) -> {
 
-            String userName = req.params().get("name");
-            String vinylId = req.params().get("");
+            String userName = req.queryParams("name");
+            String vinylId = req.queryParams("id");
+            System.out.println(userName);
 
             for (User user : allUsers) {
+                System.out.println(user.getName());
+
                 if (user.getName().equals(userName)) {
                     manager.attemptBorrowing(vinylId, user.getId());// this id is going on a journey all the way down to
                                                                     // the ReservedState class
+
                     break;
                 }
             }
@@ -59,8 +59,8 @@ public class ApplicationStart {
 
         get("/reserve", (req, res) -> {
 
-            String userName = req.params().get("name");
-            String vinylId = req.params().get("");
+            String userName = req.queryParams("name");
+            String vinylId = req.queryParams("id");
 
             for (User user : allUsers) {
                 if (user.getName().equals(userName)) {
@@ -73,10 +73,10 @@ public class ApplicationStart {
         });
 
         get("/updates", (req, res) -> {
-            String userName = req.params().get("name");// basically i create a user per connection. very inefficient but
-                                                       // since security and persistence arent issues id rather write
-                                                       // this in 5
-                                                       // minutes than tinker with logins for an hour
+            String userName = req.queryParams("name");// basically i create a user per connection. very inefficient but
+                                                      // since security and persistence arent issues id rather write
+                                                      // this in 5
+                                                      // minutes than tinker with logins for an hour
             User user = new User(userName);
             allUsers.add(user);
             manager.addObservngUser(user);

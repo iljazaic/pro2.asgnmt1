@@ -20,7 +20,7 @@ public class BorrowedState implements StateInterface {
 
 
     public boolean onReservationAttempt() {
-        return true;
+        return false;
     }
 
 }

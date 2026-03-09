@@ -8,9 +8,11 @@
 </head>
 <script>
 
-
+    var USERID;
+    var USERNAME;
     function login() {//basically the master service
         let name = document.querySelector("#name-input").value;
+        USERNAME = name;
         document.querySelector('.all').style.visibility = 'visible';
 
         document.querySelector('.own').style.visibility = 'visible';
@@ -19,19 +21,30 @@
 
             document.querySelector("#login-frame").style.visibility = "hidden";
 
-            const source = new EventSource('/updates?u=' + username); //primitive tunnel; un-ending connection
+            const source = new EventSource('/updates?name=' + name); //primitive tunnel; un-ending connection
 
             source.addEventListener('updateList', (e) => {
                 loadList(JSON.parse(e.data));
             });
 
             source.addEventListener('updateState', (e) => {
+                console.log("updating state")
                 const data = JSON.parse(e.data);
+                let li = document.querySelector(`[id="${data.id}"]`)
+                if (li !== null) {
+                    li.querySelector('.state').innerHTML = data.state
+                }
             });
         }
     }
 
-    var username = "user01";
+
+    function reserve(id) {
+        fetch("/reserve?id=" + id + "&name=" + USERNAME);
+    }
+    function borrow(id) {
+        fetch("/borrow?id=" + id + "&name=" + USERNAME);
+    }
 
     function loadList(list) {
         let el = document.querySelector("#list")
@@ -40,12 +53,12 @@
         list.forEach(li => {
 
             el.innerHTML += `
-            <li class="${li.state}" style="display:flex; justify-content:space-between; flex-direction:row; border-bottom: 2px solid black; padding: 5px">
+            <li id="${li.id}" class="${li.state}" style="display:flex;  justify-content:space-between; flex-direction:row; border-bottom: 2px solid black; padding: 5px">
             <p>${li.name}</p>
             <p>${li.id}</p>
-            <p>${li.state}</p>
-            <button id="rb" onclick="reserve">Reserve</button>
-            <button id="bb" onclick="borrow">Borrow</button>
+            <p class="state">${li.state}</p>
+            <button id="rb" onclick="reserve('${li.id}')">Reserve</button>
+            <button id="bb" onclick="borrow('${li.id}')">Borrow</button>
             </li>
             `
         });
@@ -104,13 +117,13 @@
     }
 
 
-    .mainFrame{
+    .mainFrame {
         width: 100vw;
         display: flex;
         flex-direction: row;
     }
 
-    .mainFrame>div{
+    .mainFrame>div {
         min-width: 50vw;
     }
 

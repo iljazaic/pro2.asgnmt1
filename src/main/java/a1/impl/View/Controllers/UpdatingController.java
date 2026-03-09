@@ -11,7 +11,7 @@ public class UpdatingController implements ObservingUser {
 
     @Override
     public void update(String changedId, StateInterface newState) {
-        String data = "{\"id\":\"%s\",\"state\":\"%s\"}".formatted(changedId, newState);
+        String data = "{\"id\":\"%s\",\"state\":\"%s\"}".formatted(changedId, newState.getClass().getSimpleName());
         ClientManager.broadcast(data, "updateState");
     }
 

@@ -8,6 +8,8 @@ import a1.impl.Model.StateModel.StateInterface;
 
 public class Vinyl implements BorrowableMaterialInterface {
     private String name;
+    private int releaseYear;
+    private String artist;
     private String id;
 
     private String borrower_id = null;
@@ -15,8 +17,10 @@ public class Vinyl implements BorrowableMaterialInterface {
 
     private StateInterface currentState = new FreeState();
 
-    public Vinyl(String name) {
+    public Vinyl(String name, int releaseYear, String artist) {
         this.name = name;
+        this.artist = artist;
+        this.releaseYear = releaseYear;
         this.id = UUID.randomUUID().toString();
     }
 

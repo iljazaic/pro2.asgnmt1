@@ -27,26 +27,31 @@ public class BorrowingManager implements BorrowingManagerInterface {
         this.vinylList.add(v);
     }
 
-    //public List<Vinyl> getVinylListByState(StateInterface state) {
-    //    List<Vinyl> toReturn = new ArrayList<Vinyl>();
-    //    for (Vinyl vinyl : vinylList) {
-    //        if (vinyl.getState().equals(state)) {
-    //            toReturn.add(vinyl);
-    //        }
-    //    }
-    //    return toReturn;
-    //}
-    public List<Vinyl> getVinylList(){
+    // public List<Vinyl> getVinylListByState(StateInterface state) {
+    // List<Vinyl> toReturn = new ArrayList<Vinyl>();
+    // for (Vinyl vinyl : vinylList) {
+    // if (vinyl.getState().equals(state)) {
+    // toReturn.add(vinyl);
+    // }
+    // }
+    // return toReturn;
+    // }
+    public List<Vinyl> getVinylList() {
         return this.vinylList;
     }
 
     public void updateVinylState(String vinylId, StateInterface newState) {
-        for (Vinyl v : vinylList) {
-            if (v.getId().equals(vinylId)) {
-                v.setState(newState);
-                notifyAllObservingUsers(vinylId, newState);
-                break;
+        try {
+            for (Vinyl v : vinylList) {
+                if (v.getId().equals(vinylId)) {
+                    v.setState(newState);
+                    notifyAllObservingUsers(vinylId, newState);
+                    break;
+                }
             }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
         }
     };
 
@@ -67,10 +72,13 @@ public class BorrowingManager implements BorrowingManagerInterface {
     // borrowed/reserved by the user requesting
     public void attemptBorrowing(String vinylId, String userId) {
         for (Vinyl vinyl : vinylList) {
+
             if (vinyl.getId().equals(vinylId)) {
                 boolean success = vinyl.getState().onBorrowAttempt(userId);
                 if (success) {
+
                     updateVinylState(vinylId, new BorrowedState(userId));
+
                 }
                 break;
             }
@@ -101,7 +109,7 @@ public class BorrowingManager implements BorrowingManagerInterface {
 
     @Override
     public void removeObservingUser(User user) {
-        if (observingUserList.contains((ObservingUser)user))
+        if (observingUserList.contains((ObservingUser) user))
             observingUserList.remove(user);
     }
 
