@@ -6,14 +6,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<script>
+
+
+    function login() {//basically the master service
+        let name = document.querySelector("#name-input").value;
+        document.querySelector('.all').style.visibility = 'visible';
+
+        document.querySelector('.own').style.visibility = 'visible';
+        if (name.length > 0 && name !== "") {
+
+
+            document.querySelector("#login-frame").style.visibility = "hidden";
+
+            const source = new EventSource('/updates?u=' + username); //primitive tunnel; un-ending connection
+
+            source.addEventListener('updateList', (e) => {
+                loadList(JSON.parse(e.data));
+            });
+
+            source.addEventListener('updateState', (e) => {
+                const data = JSON.parse(e.data);
+            });
+        }
+    }
+
+    var username = "user01";
+
+    function loadList(list) {
+        let el = document.querySelector("#list")
+        el.innerHTML = '';
+
+        list.forEach(li => {
+
+            el.innerHTML += `
+            <li class="${li.state}" style="display:flex; justify-content:space-between; flex-direction:row; border-bottom: 2px solid black; padding: 5px">
+            <p>${li.name}</p>
+            <p>${li.id}</p>
+            <p>${li.state}</p>
+            <button id="rb" onclick="reserve">Reserve</button>
+            <button id="bb" onclick="borrow">Borrow</button>
+            </li>
+            `
+        });
+    }
+
+
+</script>
 
 <body>
-    <ul id="list">
+    <div id="login-frame">
+        <input id="name-input" /><button onclick="login()">Login</button>
+    </div>
+    <div class="mainFrame">
+        <div class="all">
+            <h1>All Vinyls</h1>
+            <ul style="display: flex; flex-direction: column; gap:10px" id="list">
 
-    </ul>
+            </ul>
+        </div>
+        <div class="own">
+            <h1>Your Vinyls</h1>
+            <ul style="display: flex; flex-direction: column; gap:10px" id="list2">
+
+            </ul>
+        </div>
+    </div>
+
+
 </body>
 
 <style>
+    button {
+        border: none;
+        border-radius: 10px;
+        width: 100px;
+        height: 50px;
+
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+
+    button:hover {
+        border: 5px solid white;
+    }
+
+
+    body {
+        background-color: rgb(148, 216, 243);
+
+        font-family: monospace;
+        padding: 0;
+        margin: 0;
+    }
+
+
+    .mainFrame{
+        width: 100vw;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .mainFrame>div{
+        min-width: 50vw;
+    }
+
+
     .reservedOwn {
         background-color: rgb(179, 81, 174);
     }
@@ -49,48 +150,13 @@
     .reservedOwn>#rb {
         background-color: grey !important;
     }
+
+    .own,
+    .all {
+        visibility: hidden;
+    }
 </style>
 
-<script>
 
-
-    var username = "user01";
-
-    function login() {
-
-    }
-    const source = new EventSource('/events?u='+username);
-
-
-    source.addEventListener('updateList', (e) => {
-        loadList(JSON.parse(e.data));
-    });
-
-    source.addEventListener('updateState', (e) => {
-        const data = JSON.parse(e.data);
-    });
-
-
-    function loadList(list) {
-        let el = document.querySelector("#list")
-        el.innerHTML = '';
-
-        let s = 0;
-        list.forEach(li => {
-
-            el.innerHTML += `
-            <li class="${li.status}" style="display='flex'; justify-content='space-between'; width:'50%'">
-            <p>${li.name}</p>
-            <p>${li.id}</p>
-            <p>${li.status}</p>
-            <button id="rb" onclick="reserve">Reserve</button>
-            <button id="bb" onclick="borrow">Borrow</button>
-            </li>
-            `
-        });
-    }
-
-
-</script>
 
 </html>

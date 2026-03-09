@@ -1,13 +1,23 @@
 package a1.impl.Model.StateModel;
 
 public class ReservedState implements StateInterface {
-    public ReservedState(){};
+    
 
 
+    private String owner;
+
+    public ReservedState(String ownerId){
+        this.owner=ownerId;
+    };  
 
     @Override
-    public boolean onBorrowAttempt() {
-        return false;//error
+    public String getOwner(){
+        return this.owner;
+    };
+
+    @Override
+    public boolean onBorrowAttempt(String userId) {
+        return userId.equals(getOwner());//to make sure the user who reserved it rn CAN borrow it
     }
 
 

@@ -1,0 +1,14 @@
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\ApplicationStart.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\BorrowingManager.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\ModelInterfaces\BorrowableMaterialInterface.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\ModelInterfaces\BorrowingManagerInterface.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\ModelInterfaces\ObservingUser.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\Settings.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\StateModel\BorrowedState.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\StateModel\FreeState.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\StateModel\ReservedState.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\StateModel\StateInterface.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\User.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\Model\Vinyl.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\View\ClientManager.java
+C:\Users\iljaz\Desktop\assignments\pro2\ass1\src\main\java\a1\impl\View\Controllers\UpdatingController.java

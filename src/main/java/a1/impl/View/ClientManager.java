@@ -14,10 +14,11 @@ public class ClientManager {
         clients.remove(writer);
     }
 
-    public static void broadcast(String message) {
-        for (PrintWriter client : clients) {
-            client.write("data: " + message + "\n\n");
-            client.flush();
-        }
+public static void broadcast(String message, String eventname) {
+    for (PrintWriter client : clients) {
+        client.write("event: "+eventname+"\n");
+        client.write("data: " + message + "\n\n");
+        client.flush();
     }
+}
 }

@@ -1,7 +1,5 @@
 package a1.impl.Model;
 
-import java.util.Queue;
-import java.util.LinkedList;
 import java.util.UUID;
 
 import a1.impl.Model.ModelInterfaces.BorrowableMaterialInterface;
@@ -21,20 +19,6 @@ public class Vinyl implements BorrowableMaterialInterface {
         this.name = name;
         this.id = UUID.randomUUID().toString();
     }
-
-
-
-    public boolean attemptBorrow(String userId){
-        return this.getState().onBorrowAttempt();
-    }
-
-    public boolean attemptReservation(String userId){
-        return this.getState().onReservationAttempt();
-    }
-
-
-
-
 
     @Override
     public void updateState(StateInterface newState) {

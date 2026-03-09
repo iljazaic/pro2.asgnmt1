@@ -5,8 +5,14 @@ public class FreeState implements StateInterface {
     public FreeState() {
     }
 
+
     @Override
-    public boolean onBorrowAttempt() {
+    public String getOwner(){
+        return null;
+    }
+
+    @Override
+    public boolean onBorrowAttempt(String userId) {
         return true;
     }
 

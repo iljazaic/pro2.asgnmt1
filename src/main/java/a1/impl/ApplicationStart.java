@@ -8,6 +8,7 @@ import java.util.List;
 
 import a1.impl.Model.BorrowingManager;
 import a1.impl.Model.User;
+import a1.impl.Model.Vinyl;
 import a1.impl.View.ClientManager;
 import a1.impl.View.Controllers.UpdatingController;
 import spark.Spark;
@@ -23,8 +24,15 @@ public class ApplicationStart {
         UpdatingController controller = new UpdatingController();
         BorrowingManager manager = new BorrowingManager(controller);
 
-        Spark.port(1973);
 
+        for (int i = 1; i <= 10; i++) {
+            manager.addVinyl(new Vinyl("V" + i));
+        }
+
+
+
+        Spark.port(1973);
+        System.out.println("Web GUI running on http://localhost:1973");
         List<User> allUsers = new ArrayList<User>();
 
         get("/", (req, res) -> {
@@ -32,7 +40,34 @@ public class ApplicationStart {
             return new String(Files.readAllBytes(Paths.get("src/main/java/a1/impl/View/public/index.html")));
         });
 
+
         get("/borrow", (req, res) -> {
+
+            String userName = req.params().get("name");
+            String vinylId = req.params().get("");
+
+            for (User user : allUsers) {
+                if (user.getName().equals(userName)) {
+                    manager.attemptBorrowing(vinylId, user.getId());// this id is going on a journey all the way down to
+                                                                    // the ReservedState class
+                    break;
+                }
+            }
+
+            return null;
+        });
+
+        get("/reserve", (req, res) -> {
+
+            String userName = req.params().get("name");
+            String vinylId = req.params().get("");
+
+            for (User user : allUsers) {
+                if (user.getName().equals(userName)) {
+                    manager.attemptReservation(vinylId, userName);
+                    break;
+                }
+            }
 
             return null;
         });
@@ -54,7 +89,7 @@ public class ApplicationStart {
             ClientManager.addClient(writer);
 
             controller.setUserId(userName);
-
+            controller.sendWhole(manager.getVinylList());
             try {
                 while (!writer.checkError()) {
                     Thread.sleep(1000);// basically observer state pattern but as a web server; i need to keep the tcp
@@ -63,6 +98,7 @@ public class ApplicationStart {
             } finally {
                 ClientManager.removeClient(writer);
                 allUsers.remove(user);// no memleaks
+                manager.disconnectUser(user.getId());
                 manager.removeObservingUser(user);
             }
 
